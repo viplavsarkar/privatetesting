@@ -1,0 +1,32 @@
+extends layout
+
+block content
+	h1=title
+	p This is sign in page.<br>nWelcome to #{title}
+	form#formAddUser(name="adduser",method="post",action="/adduser")
+		table(border=1)
+			tr
+				td Academyurl
+				td
+					input#inputAcademyName(type="text", placeholder="academy", name="useracademyurl")
+			tr
+				td Email
+				td
+					input#inputUserEmail(type="text", placeholder="email", name="useremail")
+			tr
+				td First Name
+				td
+					input#inputUserName(type="text", placeholder="first name", name="firstname")
+			tr
+				td Password
+				td
+					input#inputUserPassword(type="text", placeholder="password", name="password")
+			tr
+				td Country
+				td
+					input#inputUserName(type="text", placeholder="country", name="usercountry")
+			tr
+				td 
+				td
+					button#btnSubmit(type="submit") submit
+
