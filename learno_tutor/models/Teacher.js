@@ -20,11 +20,6 @@ var nameValidator = [
     validator: 'isLength',
     arguments: [3, 50],
     message: 'Name should be between {ARGS[0]} and {ARGS[1]} characters'
-  }),
-  validate({
-    validator: 'isAlphanumeric',
-    passIfEmpty: false,
-    message: 'Name should contain alpha-numeric characters only'
   })
 ];
 
@@ -36,7 +31,9 @@ var emailValidator = [
 	})
 ];
 
-var TodoSchema = new mongoose.Schema({
+var TeacherLogin = new mongoose.Schema({
+  wiziqid: { type: Number, default: 0 },
+  fbid: { type: Number, default: 0 },
   name: {	type: String,
   			trim: true, 
   			validate: nameValidator
@@ -53,9 +50,36 @@ var TodoSchema = new mongoose.Schema({
   updated_at: { type: Date, default: Date.now}
 });
 
-TodoSchema.pre('save', function(next){
+TeacherLogin.pre('save', function(next){
 	console.log(" good ");
 	next();
 });
 
-module.exports = mongoose.model('todo', TodoSchema);
+module.exports = mongoose.model('teacher', TeacherLogin);
+
+//teacher profile details
+/*
+var TeacherProfile = new mongoose.Schema({
+  name: { type: String,
+        trim: true, 
+        validate: nameValidator
+      },
+  email: { 
+        type: String,
+        trim: true,       
+        validate: emailValidator
+      },
+  password: { type: String, required: true },
+  academyurl: { type: String, required: true, validate: academyUrlValidator },
+  country: { type: String, default: "" },
+  status: { type: Number, default: 0},
+  updated_at: { type: Date, default: Date.now}
+});
+
+TeacherProfile.pre('save', function(next){
+  console.log(" good ");
+  next();
+});
+
+module.exports = mongoose.model('teacher_profile', TeacherProfile);
+*/
