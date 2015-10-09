@@ -5,7 +5,7 @@ var validate = require('mongoose-validator');
 var academyUrlValidator = [
   validate({
     validator: 'isLength',
-    arguments: [3, 50],
+    arguments: [1, 50],
     message: 'Academy Url should be between {ARGS[0]} and {ARGS[1]} characters'
   }),
   validate({
@@ -18,7 +18,7 @@ var academyUrlValidator = [
 var nameValidator = [
   validate({
     validator: 'isLength',
-    arguments: [3, 50],
+    arguments: [1, 50],
     message: 'Name should be between {ARGS[0]} and {ARGS[1]} characters'
   })
 ];

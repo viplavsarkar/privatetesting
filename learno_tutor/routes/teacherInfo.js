@@ -12,18 +12,25 @@ router.get('/:id', function(req, res, next){
 });
 
 router.put('/:id', function(req, res, next){	
-
+	TeacherInfo.findOne({teacher_id: req.params.id}, function(err, teaInfo){
+		if(err) res.send(err);
+		if(teaInfo) return updateTeacherInfo(req, res, next, teaInfo);
+		return createTeacherInfo(req, res, next);
+	});
+	/*
 	TeacherInfo.findById(req.params.id, function(err, teaInfo){
 		if(err) res.send(err);
 		if(teaInfo) return updateTeacherInfo(req, res, next);
 		return createTeacherInfo(req, res, next);
 
 	});
+*/
 	
 });
 
 function getTeacherInfo(req, res, next){
-	TeacherInfo.findById(req.params.id, function(err, tea){
+	TeacherInfo.findOne({teacher_id: req.params.id}, function(err, tea){
+	//TeacherInfo.findById(req.params.id, function(err, tea){
 		if(err) return next(err);
 		if(tea) return res.json(tea);// createTeacherInfo(req, res, next); //res.json(tea);//return res.json({success: true, message: "email exists"});
 		res.json({success: false, message: "User detail is not available"});
@@ -31,16 +38,12 @@ function getTeacherInfo(req, res, next){
 	});
 }
 
-function updateTeacherInfo(req, res, next){
-	/*
-	var postData = new TeacherInfo({
-			_id: req.params.id,
-			name: req.body.name
-	});
-	*/
-	TeacherInfo.findByIdAndUpdate(req.params.id, req.body, function(err, post){
+function updateTeacherInfo(req, res, next, teaInfo){
+		
+	TeacherInfo.findByIdAndUpdate(teaInfo._id, req.body, function(err, post){
 		if(err) return next(err);
-		res.json(post);
+		console.log("TeacherInfo updated:" + JSON.stringify(req.body));
+		return res.json(post);
 	});
 }
 
@@ -56,7 +59,7 @@ function createTeacherInfo(req, res, next){
 				res.json(err.errors);
 			}
 		}	
-		return 	updateTeacherInfo(req, res, next);
+		return 	updateTeacherInfo(req, res, next, post);
 		//res.json({success:true, teacher: post});		
 	});
 

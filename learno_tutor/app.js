@@ -14,7 +14,7 @@ var db = monk('localhost:27017/learno_admin');
 
 //Initialize MongoDB connection
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/learno_admin', function(err){
+mongoose.connect('mongodb://localhost:27017/learno_dev2', function(err){
   if(err) {
         console.log('connection error', err);
     } else {
@@ -22,11 +22,11 @@ mongoose.connect('mongodb://localhost:27017/learno_admin', function(err){
     }
 });
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
-var teachers = require('./routes/teacher')
+var routes    = require('./routes/index');
+var users     = require('./routes/users');
+var teachers  = require('./routes/teacher')
 var teacherinfo = require('./routes/teacherInfo')
-var app = express();
+var app       = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

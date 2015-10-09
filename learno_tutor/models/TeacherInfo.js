@@ -37,6 +37,7 @@ var emailValidator = [
 ];
 
 var TeacherInfo = new mongoose.Schema({
+  teacher_id: mongoose.Schema.Types.ObjectId,
   wiziqid: { type: Number, default: 0 },
   name: {	type: String },
   about: { type: String },
@@ -78,6 +79,7 @@ var TeacherInfo = new mongoose.Schema({
         pin_code: { type: Number },
       }],
   tuition_fee: { type: Number },
+  price_per_hour: { type: String, default: ""},
   tuition_location_type:{
       learner_home: { type: String, default: "0" },
       online: { type: String, default: "1" },
@@ -93,7 +95,8 @@ var TeacherInfo = new mongoose.Schema({
   degree: { type: String },
   age_group: { type: String },
   facebook_name: { type: String },
-  twitter_name: { type: String }
+  twitter_name: { type: String },
+  quickblox_id: { type: String }
 });
 
 TeacherInfo.pre('save', function(next){
@@ -101,8 +104,8 @@ TeacherInfo.pre('save', function(next){
 	next();
 });
 
-module.exports = mongoose.model('teacher_info', TeacherInfo);
-
+//module.exports = mongoose.model('teacher_info', TeacherInfo);
+module.exports = mongoose.model('tutors', TeacherInfo);
 //teacher profile details
 /*
 var TeacherProfile = new mongoose.Schema({
