@@ -7,11 +7,6 @@ var academyUrlValidator = [
     validator: 'isLength',
     arguments: [1, 50],
     message: 'Academy Url should be between {ARGS[0]} and {ARGS[1]} characters'
-  }),
-  validate({
-    validator: 'isAlphanumeric',
-    passIfEmpty: false,
-    message: 'Academy Url should contain alpha-numeric characters only'
   })
 ];
 

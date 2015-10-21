@@ -7,11 +7,6 @@ var academyUrlValidator = [
     validator: 'isLength',
     arguments: [3, 50],
     message: 'Academy Url should be between {ARGS[0]} and {ARGS[1]} characters'
-  }),
-  validate({
-    validator: 'isAlphanumeric',
-    passIfEmpty: false,
-    message: 'Academy Url should contain alpha-numeric characters only'
   })
 ];
 
@@ -20,11 +15,6 @@ var nameValidator = [
     validator: 'isLength',
     arguments: [3, 50],
     message: 'Name should be between {ARGS[0]} and {ARGS[1]} characters'
-  }),
-  validate({
-    validator: 'isAlphanumeric',
-    passIfEmpty: false,
-    message: 'Name should contain alpha-numeric characters only'
   })
 ];
 
@@ -40,8 +30,9 @@ var TeacherInfo = new mongoose.Schema({
   teacher_id: mongoose.Schema.Types.ObjectId,
   wiziqid: { type: Number, default: 0 },
   name: {	type: String },
+  academyurl: { type: String },
   about: { type: String },
-  approved: { type: Boolean },
+  approved: { type: Boolean, default: false },
   contact_numbers: { mobile_number:{type: String} },
   created_at: { type: Date },
   updated_at: { type: Date, default: Date.now },
@@ -63,12 +54,12 @@ var TeacherInfo = new mongoose.Schema({
   last_name: { type: String },
   qualifications:[String],
   rating: { type: Number },
-  schedule: mongoose.Schema.Types.Mixed,
+  schedule: { type: mongoose.Schema.Types.Mixed, default: {} },
   subject_ids:[mongoose.Schema.Types.ObjectId],
   subject_names:[String],
   teaching_class_level: mongoose.Schema.Types.Mixed,
   teaching_languages:[String],
-  total_exp: { type: Number },
+  total_exp: { type: Number, default: 0 },
   tuition_addresses:[{
         state: { type: String },
         _id: mongoose.Schema.Types.ObjectId,
@@ -77,8 +68,9 @@ var TeacherInfo = new mongoose.Schema({
         is_locset: { type: Boolean },
         location: [Number],
         pin_code: { type: Number },
+        city: { type: String }
       }],
-  tuition_fee: { type: Number },
+  tuition_fee: { type: Number, default: 0 },
   price_per_hour: { type: String, default: ""},
   tuition_location_type:{
       learner_home: { type: String, default: "0" },
@@ -86,8 +78,8 @@ var TeacherInfo = new mongoose.Schema({
       teacher_home: { type: String, default: "1" },
       },
   tuition_type:{
-      group: { type: String },
-      single: { type: String }
+      group: { type: String, default: "0" },
+      single: { type: String, default: "1" }
       },
   tutor_image:  { type: String, default: "" },  
   video_image_url: { type: String },
@@ -96,7 +88,8 @@ var TeacherInfo = new mongoose.Schema({
   age_group: { type: String },
   facebook_name: { type: String },
   twitter_name: { type: String },
-  quickblox_id: { type: String }
+  quickblox_id: { type: String },
+  _keywords: [String]
 });
 
 TeacherInfo.pre('save', function(next){

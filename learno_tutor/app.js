@@ -14,7 +14,7 @@ var db = monk('localhost:27017/learno_admin');
 
 //Initialize MongoDB connection
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/learno_dev2', function(err){
+mongoose.connect('mongodb://localhost:27017/learno', function(err){
   if(err) {
         console.log('connection error', err);
     } else {
@@ -25,7 +25,9 @@ mongoose.connect('mongodb://localhost:27017/learno_dev2', function(err){
 var routes    = require('./routes/index');
 var users     = require('./routes/users');
 var teachers  = require('./routes/teacher')
-var teacherinfo = require('./routes/teacherInfo')
+var teacherinfo = require('./routes/teacherInfo');
+var subjects  = require('./routes/subject');
+
 var app       = express();
 
 // view engine setup
@@ -51,7 +53,7 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/teachers', teachers);
 app.use('/teacherinfo', teacherinfo);
-
+app.use('/subjects', subjects);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

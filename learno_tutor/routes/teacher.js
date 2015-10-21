@@ -7,6 +7,9 @@ var TeacherInfo = require('../models/TeacherInfo.js');
 
 var request = require('request');
 
+var wiziqUrl = 'http://wizqe.authordm.com';
+//var wiziqUrl = 'http://wiztest.authordm.com';
+
 /* GET users listing. */
 router.get('/all', function(req, res, next) {
 	Teacher.find(function (err, todos) {
@@ -21,7 +24,7 @@ router.post('/signup', function(req, res, next){
 });
 
 router.post('/login', function(req, res, next){
-	//http://xxxxxxxxxx/home/mobilesignup?AcademySubdomainName=creamylayer&AcademyEmail=biplabsarka.r7@gmail.com&AcademyName=biplabsarka.r7&AcademyPassword=1234567&AcademyCountryName=india
+	//http://wiztest.authordm.com/home/mobilesignup?AcademySubdomainName=creamylayer&AcademyEmail=biplabsarka.r7@gmail.com&AcademyName=biplabsarka.r7&AcademyPassword=1234567&AcademyCountryName=india
 	//wiziq_login(req, res, next);
 
 	checkEmailBeforeLogin(req, res, next);
@@ -91,30 +94,21 @@ function checkEmailBeforeSignUp(req, res, next){
 		if(err) return next(err);
 		if(tea) return res.json({success: false, message: "Users exists. Please login instead"});		
 		else wiziq_signup(req, res, next);
-		//return res.json({success: false, message: "Cannot signup till evening..."});
+		//checkEmailAndAddTeacherLocallyForLogin(req, res, next, 0);
+			//return res.json({success: false, message: "Cannot signup till evening..."});
 	});
 }
 
 function wiziq_login(req, res, next, fbId){
 	console.log("wiziq_login() - user not found in local");
 	
-	var loginUrl;
-	var formData;
-
-	if(fbId) {
-		loginUrl = 'http://xxxxxxxxxx/home/mobilelogin';
-		formData = { form: { txtUserName: req.body.useremail, txtPassword: req.body.password } };
-		//req.body.password = '12345678';
-	}else{
-		loginUrl = 'http://xxxxxxxxxx/home/mobilelogin';
-		formData = { form: { txtUserName: req.body.useremail, txtPassword: req.body.password } };
-	}
+	
 	//return res.json(formData);
 	console.log('username: ' + req.body.useremail + ' password: ' + req.body.password + ' fbId: ' + fbId);
 	request.post(
-		'http://xxxxxxxxxx/mobilelogin/',
+		wiziqUrl + '/home/mobilelogin',
 		{ form: { txtUserName: req.body.useremail, txtPassword: req.body.password } },
-		function (error, response, body){			
+		function (error, response, body){
 			console.log("wiziq_login() - response obtained from wiziq");
 				//return res.json(response);
 			if(!error && response.statusCode == 200){
@@ -154,7 +148,8 @@ function wiziq_signup(req, res, next, fbId){
 	//return res.json(formData);
 	//console.log('username: ' + req.body.useremail + ' password: ' + req.body.password + ' fbId: ' + fbId);
 	request.post(
-		'http://xxxxxxxxxx/mobilesignup/',
+		//'http://wiztest.authordm.com/mobilesignup/',
+		wiziqUrl + '/mobilesignup/',
 		{ 
 			form: { 					
 					AcademySubdomainName: 	req.body.useracademyurl,	//has to be unique
@@ -165,13 +160,14 @@ function wiziq_signup(req, res, next, fbId){
 				}, 
 		},
 		function (error, response, body){			
-			console.log("wiziq_signup() - response obtained from wiziq");
+			console.log("wiziq_signup() - response obtained from wiziq-body=" + response);
+			
 			//return res.json(response);
 			if(!error && response.statusCode == 200){
 				var bodyObj = JSON.parse(body);
 				console.log('wiziqId=' + bodyObj.wiziqId);// bodyObj.wiziqId);
 				if(bodyObj.wiziqId == -1 ){					
-					res.json({success: false, message: bodyObj.errorForMobile, statusCode: 200});
+					res.json({success: false, message: bodyObj.errorForMobile, statusCode: 200, errorCode: 450});
 				}else if(bodyObj.wiziqId > 0 ) {
 					console.log("wiziq_signup() - user created and wiziqId=" +  bodyObj.wiziqId);
 					//res.json(bodyObj);
@@ -198,6 +194,7 @@ function wiziq_signup(req, res, next, fbId){
 }
 
 function checkEmailAndAddTeacherLocallyForLogin(req, res, next, originalWiziqId){
+	console.log("checkEmailAndAddTeacherLocallyForLogin()");
 	Teacher.findOne({email: req.body.useremail}, function(err, tea){
 		if(err) return next(err);
 		if(tea) return res.json({success: false, message: "email exists, please login instead"});
@@ -277,11 +274,12 @@ function linkTeacherInfoWithTeacher(req, res, next, teacher, tchrInfo){
 	var dataToUpdate = { 
 							wiziqid 	: teacher.wiziqid,
 							first_name	: teacher.name,
-							teacher_id 	: teacher._id
+							teacher_id 	: teacher._id,
+							academyurl	: teacher.academyurl
 						};
 	TeacherInfo.findByIdAndUpdate(tchrInfo._id, dataToUpdate, function(err, post){
 		console.log("teacher --> teacherInfo associated");
-		if(err) return next(err);
+		if(err) return handleError(req, res, next, err);// return next(err);
 		return res.json(teacher);
 	});
 }
@@ -294,6 +292,7 @@ function createTeacherInfo(req, res, next, teacher){
 									first_name	: teacher.name,
 									email_id	: teacher.email, 
 									wiziqid 	: teacher.wiziqid,
+									academyurl	: teacher.academyurl,
 									created_at: Date.now
 								});
 
@@ -303,6 +302,7 @@ function createTeacherInfo(req, res, next, teacher){
 			if(err.errors){
 				return res.json(err.errors);
 			}
+			return res.json({success: false, message: 'teacher could not be created'});
 		}
 		return res.json({success:true, teacher: teacher});
 		//return 	updateTeacherInfo(req, res, next);
@@ -316,5 +316,10 @@ router.put('/:id', function(req, res, next){
 		res.json(post);
 	});
 });
+
+function handleError(req, res, next, err){
+	//LOG IT HERE
+	return res.json({success: false, message: "Sorry to tell you that some error has occured", statusCode: 505});
+}
 
 module.exports = router;
