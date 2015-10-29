@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var validate = require('mongoose-validator');
 //var teacherValidation =  require('./TeacherValidation.js');
-
+//var Subject = require('./Subject.js')
 var academyUrlValidator = [
   validate({
     validator: 'isLength',
@@ -55,6 +55,8 @@ var TeacherInfo = new mongoose.Schema({
   qualifications:[String],
   rating: { type: Number },
   schedule: { type: mongoose.Schema.Types.Mixed, default: {} },
+   //items: [{type: mongoose.Schema.Types.ObjectId, ref: 'Item'}]
+  //subject_ids:[{type: mongoose.Schema.Types.ObjectId, ref: 'Subject'}],
   subject_ids:[mongoose.Schema.Types.ObjectId],
   subject_names:[String],
   teaching_class_level: mongoose.Schema.Types.Mixed,
@@ -74,8 +76,8 @@ var TeacherInfo = new mongoose.Schema({
   price_per_hour: { type: String, default: ""},
   tuition_location_type:{
       learner_home: { type: String, default: "0" },
-      online: { type: String, default: "1" },
-      teacher_home: { type: String, default: "1" },
+      online: { type: String, default: "0" },
+      teacher_home: { type: String, default: "0" },
       },
   tuition_type:{
       group: { type: String, default: "0" },
