@@ -17,5 +17,10 @@
     "monk": "~1.0.1",
     "morgan": "~1.6.1",
     "serve-favicon": "~2.3.0"
-  }
+  },
+  "readme": "ERROR: No README data found!",
+  "_id": "learno_tutor@0.0.0",
+  "_shasum": "5fd1b82e113658eeeafcc9181619f7f151797972",
+  "_from": "learno_tutor",
+  "_resolved": "file:learno_tutor"
 }

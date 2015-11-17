@@ -1,11 +1,10 @@
 var mongoose = require('mongoose');
 //var validate = require('mongoose-validator');
 //var teacherValidation =  require('./TeacherValidation.js');
-//var TeacherInfo = require('./TeacherInfo.js');
+
 
 var Subject = new mongoose.Schema({  
-  //tutor_ids: [{type: mongoose.Schema.Types.ObjectId, ref: 'TeacherInfo'}],
-  tutor_ids: [mongoose.Schema.Types.ObjectId],  
+  tutor_ids: [mongoose.Schema.Types.ObjectId], 
   name: {	type: String }, 
   is_popular: { type: Boolean},
   image_path: { type: String},

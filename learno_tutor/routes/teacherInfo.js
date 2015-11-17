@@ -27,16 +27,23 @@ router.get('/testing/:subjectId', function(req, res, next){
 */
 
 router.get('/all', function(req, res, next){
-	/*
+
+	//throw new Error('hello');
+	
 	var numerator = 5;
 	var denominator	= 0;
 	var ratio = numerator / denominator;
-	res.json({val: ratio});
-	*/
+	 res.json({val: ratio});
+	
+	var obj = JSON.stingify(hello);
+	res.json({val: obj});
+	
+	//res.send(err);
 	TeacherInfo.find({},function(err, tea){
 		if(err) res.send(err);
 		else return res.json(tea);
 	});
+	
 });
 
 router.get('/:id', function(req, res, next){	
